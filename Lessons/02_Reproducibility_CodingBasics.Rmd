@@ -127,7 +127,7 @@ What happens if there is a typo in your code? Type the following in the R window
 
 ```{r}
 long_name_for_illustration <- 11
-
+long_name_for_illustration
 ```
 
 ### Comments
@@ -148,8 +148,7 @@ R functions are the major tool used in R. Functions can do virtually unlimited t
 seq(1, 10)
 ten_sequence <- seq(1, 10)
 ten_sequence
-
-seq(1, 10, 2) # from, to, by
+seq(1, 10, 2) # from 1, to 10, by 2
 ```
 
 The basic form of a function is `functionname()`, and the packages we will use in this class will use these basic forms. However, there may be situations when you will want to create your own function. Below is a description of how to write functions through the metaphor of creating a recipe (credit: @IsabellaGhement on Twitter).
