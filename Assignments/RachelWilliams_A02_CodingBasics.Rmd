@@ -73,29 +73,27 @@ student_status<- (data.frame("Name"=vector1, "Grade"=vector2, "Scholarship"=vect
 
 ```{r basics 3}
 #10. Create a function using if...else
-function1 <-if(x>50){
-  print("Pass")
-} else {
-    print("Fail")
-  }
+function1 <- function(x){
+  if(x>50) {print("Pass")} 
+  else {print("Fail")}
+}
 
 #11. Create a function using ifelse()
-function2 <- ifelse(x>50,print("Pass"),print("Fail"))
+function2 <- function(x){ifelse(x>50,print("Pass"),print("Fail"))}
 #12a. Run the first function with the value 52.5
-x=52.5
-function1
+function1(52.5)
 #12b. Run the second function with the value 52.5
-function2
+function2(52.5)
 #13a. Run the first function with the vector of test scores
-x=vector2
-function1
+#function1(vector2)
 #13b. Run the second function with the vector of test scores
-function2
+function2(vector2)
 ```
 
 14. QUESTION: Which option of `if`...`else` vs. `ifelse` worked? Why? (Hint: search the web for "R vectorization")
 
-> Answer: 
+> Answer: The 'ifelse' function worked becasue 'if... else' is not vectorized. This 
+means it will not operate on all elements of a vector without looping. 
 
 
 **NOTE** Before knitting, you'll need to comment out the call to the function in Q13 that does not work. (A document can't knit if the code it contains causes an error!)
