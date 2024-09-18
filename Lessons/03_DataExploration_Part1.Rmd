@@ -58,9 +58,9 @@ You need to load packages each time you start (or restart) an R coding session; 
 -  Also, you can load, unload, or just view what packages are loaded in your current session via the Packages tab in the Output pane. However, it's best practice to load packages in your code. (Can you guess why?) 
 
 ```{r Setup: Loading Packages}
-#Install packages - uncomment these only when you need to install packages
+#Install packages - uncomment these only when you need to install packages. Knitting can't work with install packages
 #install.packages('dplyr')
-#install.packages('ggplot')
+#install.packages('ggplot2')
 #install.packages('here')
 
 #Load the tidyverse, ggplot2, and here package
@@ -76,7 +76,7 @@ library(tidyverse)
 
 Question: What happens in the console when you load a package?
 
-> Answer: 
+> Answer: WHen you load a package it is enabled for your current R-script. 
 
 ---
 
