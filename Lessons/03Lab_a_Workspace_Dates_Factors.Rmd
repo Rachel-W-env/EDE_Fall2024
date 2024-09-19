@@ -3,6 +3,8 @@ title: "Lab 3b - Workspaces, Dates, and Factors"
 author: "Environmental Data Analytics | John Fay and Luana Lima "
 date: "Fall 2024"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Objectives
@@ -78,7 +80,9 @@ print(filenames)
 ```{r here in action}
 
 # 1. Read the 'NTL-LTER_Lake_ChemistryPhysics_Raw.csv' into a dataframe
-
+Lake_ChemistryPhysics <- read.csv(
+  file=here('Data','Raw','NTL-LTER_Lake_ChemistryPhysics_Raw.csv'),
+  stringsAsFactors = T)
 
 # 2.
 
@@ -101,7 +105,7 @@ Remember formatting of dates in R:
 # An example is provided to get you started.
 # (code must be uncommented)
 today <- Sys.Date()
-format(today, format = "%B")
+format(today, format = "%b")
 #format(today, format = "")
 #format(today, format = "")
 #format(today, format = "")
@@ -132,9 +136,9 @@ date_obj_today
 
 #Ex_3 - on your own...
 str_juneteenth <- "19 June 1865"
-#Since the format is month-day-year we will use function mdy()
-#date_juneteenth <- ()
-#date_juneteenth
+#Since the format is day-month-year we will use function dmy()
+date_juneteenth <- dmy(str_juneteenth)
+date_juneteenth
 ```
 ### The century issue
 
@@ -147,6 +151,9 @@ date_obj_past <- ymd(str_past)
 date_obj_past
 
 #Build a function to fix year that is more general than the one discussed in the lesson
+d <-date_obj_past
+cutoff <- 24
+
 fix.early.dates <- function(d, cutoff) {
   
        m <- year(d) %% 100  
@@ -171,6 +178,7 @@ fixed_date_obj_past
 #Fix for century issue
 str_past <- "55-feb-3"
 
+#L is short for long integer, meaning it supports a long array of values
 #Alternative 1
 date_obj_past <- fast_strptime(str_past,"%y-%b-%d",cutoff_2000=24L)
 date_obj_past
@@ -201,6 +209,7 @@ lubridate::origin
 library(tidyverse);library(lubridate); library(here)
 
 #Read in data, don't convert strings to factors
+#dim shows how many rows and columns are in the dataset
 sites <- read.csv(here('Data/Raw/NWIS_SiteFlowData_NE_RAW.csv'))
 dim(sites)
 
@@ -222,6 +231,7 @@ sites$dow <- wday(sites$date)
 class(sites$dow)
 
 #List the unique values in the column
+#Shows only the 4th, 5th, and 3rd day of the week are in the dataset
 unique(sites$dow)
 
 #Summary - is it meaningful?
@@ -277,7 +287,7 @@ levels(sites$dow)
 #Plot again
 ggplot(sites,aes(x=dow)) +
   geom_bar() + 
-  scale_x_discrete(drop=FALSE)
+  scale_x_discrete(drop=FALSE) 
 
 ```
 
