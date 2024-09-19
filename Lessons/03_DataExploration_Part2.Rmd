@@ -25,9 +25,10 @@ Why is data exploration our first step in analyzing a dataset? What information 
 ```{r, Setup-Import-Explore, message = FALSE}
 ## -Set up-
 # 1. Load packages (tidyverse, here)
-
+library(here)
+library(tidyverse)
 # 2. Check the working directory
-
+here()
 # 3. Import datasets
 
 ## -Initial Exploration-
