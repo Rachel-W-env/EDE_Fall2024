@@ -76,15 +76,17 @@ cycling and the carbon cycle, and can also affect streamflow.
 
 5.  What are the dimensions of the dataset?
 
-```{r}
-dim(Neonics)
+```{r Neonics dimensions}
+dim(Neonics) #Shows number of rows and columns. 
+#There are 4623 rows and 30 columns. 
 
 ```
 
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest? [Tip: The `sort()` command is useful for listing the values in order of magnitude...]
 
-```{r}
-sort(summary(Neonics$Effect), decreasing = T)
+```{r Effect summary Neonics}
+sort(summary(Neonics$Effect), decreasing = T) 
+#decreasing was used to sort from highest to lowest
 
 ```
 
@@ -95,9 +97,9 @@ protection.
 
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: Explore the help on the `summary()` function, in particular the `maxsum` argument...]
 
-```{r}
+```{r Summary of top Neonics species}
 summary(Neonics$Species.Common.Name, maxsum=6)
-
+#Maxsum lists only the top 6 values.
 ```
 
 > Answer:
@@ -108,7 +110,7 @@ summary(Neonics$Species.Common.Name, maxsum=6)
  
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric? [Tip: Viewing the dataframe may be helpful...]
 
-```{r}
+```{r Neonics Conc.1 Author class}
 class(Neonics$Conc.1..Author.)
 
 ```
@@ -120,16 +122,17 @@ paired with units in Conc.1.Units.Author.
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
-```{r}
+```{r Neonics publication year freqpoly graph}
 ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year), bins=50) + scale_x_continuous(limits = c(1980 , 2020))
-  
+#Scale must be continuous not discrete; I chose the limits based on the highest 
+#and lowest dates in the data. 
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
-```{r}
+```{r Color freqpoly graph}
 ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year, color= Test.Location), bins=50)+ scale_x_continuous(limits = c(1980 , 2020))
-
+#Whatever part of the data color is will be differentiated. 
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
@@ -142,7 +145,7 @@ often until usage decreased dramatically around 2010.
 
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
-```{r}
+```{r Neonics barplot Endpoint}
 ggplot(data = Neonics, aes(x = Endpoint)) +
   geom_bar() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
@@ -155,9 +158,9 @@ effect level and LOEL means lowest observable effect level.
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018.
 
-```{r}
+```{r Litter factor to date}
 class(Litter$collectDate)#factor, not data
-Litter$collectDate <- ymd(Litter$collectDate)
+Litter$collectDate <- ymd(Litter$collectDate)# Use function values in correct order
 class(Litter$collectDate)
 unique(Litter$collectDate)
 
@@ -166,30 +169,32 @@ unique(Litter$collectDate)
 
 13. Using the `unique` function, determine how many different plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
-```{r}
+```{rLitter unique plot IDs}
 unique(Litter$plotID)
 
 ```
 
-> Answer: 12 different plots were sampled at Niwot Ridge. 
+> Answer: 12 different plots were sampled at Niwot Ridge. The information from 
+unique is different because it only includes the number of unique values. Summary
+also includes how many instances there were of each value. 
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 
-```{r}
+```{r Litter functional group bar plot}
 ggplot(data = Litter, aes(x = functionalGroup)) +
   geom_bar() 
-
+#This bar plot showed less mixed than other groups.
 ```
 
 15. Using `geom_boxplot` and `geom_violin`, create a boxplot and a violin plot of dryMass by functionalGroup.
 
-```{r}
+```{r Litter mass plots}
 ggplot(Litter) +
 geom_boxplot(aes(x = functionalGroup, y = dryMass, group = cut_width(functionalGroup, 1)))
 
 ggplot(Litter) +
   geom_violin(aes(x = functionalGroup, y = dryMass), 
-              draw_quantiles = c(0.25, 0.5, 0.75))
+              draw_quantiles = c(0.25, 0.5, 0.75)) #Very thin
 
 ```
 
