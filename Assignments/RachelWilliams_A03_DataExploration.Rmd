@@ -33,8 +33,10 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 1.  Load necessary packages (tidyverse, lubridate, here), check your current working directory and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. Be sure to include the subcommand to read strings in as factors.
 
 ```{r,  message = FALSE}
+#Loading necessary packages
 library(tidyverse); library(lubridate); library(here)
 
+#Reading in Neonics and Litter data
 Neonics <- read.csv(
   file=here('Data','Raw','ECOTOX_Neonicotinoids_Insects_raw.csv'),
   stringsAsFactors = T
@@ -63,9 +65,12 @@ cycling and the carbon cycle, and can also affect streamflow.
 4.  How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here:
 
 > Answer: 
- 1.
- 2.
- 3. 
+ 1. Litter traps were used to collect data. The debris was collected from the 
+ traps by plant functional type. 
+ 2. Litter waws collected from elevated traps and fine debris was collected from
+ ground traps.
+ 3. Mass was collected for samples based on their functional group. These groups
+ included leaves, needles, seeds, flowers, twigs, and woody material. 
 
 ## Obtain basic summaries of your data (Neonics)
 
@@ -91,12 +96,16 @@ protection.
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: Explore the help on the `summary()` function, in particular the `maxsum` argument...]
 
 ```{r}
-Summary(Neonics$Species.Common.Name)
+summary(Neonics$Species.Common.Name, maxsum=6)
 
 ```
 
 > Answer:
-
+ The most common species were honey bees, parasitic wasps, buff tailed bumblebees,
+ Carolinan Honey Bee, Bumble Bee, and other. All of these species are bees or 
+ wasps. This is important because they are pollinators that are needed for
+ plant health. THe fact that they are dying more than pests is cause for concern.
+ 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric? [Tip: Viewing the dataframe may be helpful...]
 
 ```{r}
@@ -104,45 +113,50 @@ class(Neonics$Conc.1..Author.)
 
 ```
 
-> Answer: THe class of this column is factor. It isn't numeric because
+> Answer: THe class of this column is factor. It isn't numeric because it is 
+paired with units in Conc.1.Units.Author.
 
 ## Explore your data graphically (Neonics)
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
 ```{r}
-
-
+ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year), bins=50) + scale_x_continuous(limits = c(1980 , 2020))
+  
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
 ```{r}
-
+ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year, color= Test.Location), bins=50)+ scale_x_continuous(limits = c(1980 , 2020))
 
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer:
+> Answer: The most common test locactions are Lab and Field natural. Lab becomes
+more popular over time and had the highest usage. The natural field was used 
+often until usage decreased dramatically around 2010.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
 ```{r}
-
+ggplot(data = Neonics, aes(x = Endpoint)) +
+  geom_bar() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ```
 
-> Answer:
+> Answer: The two most end points are LOEL and NOEL. NOEL means no observable
+effect level and LOEL means lowest observable effect level. 
 
 ## Explore your data (Litter)
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018.
 
 ```{r}
-class(Litter$collectDate) #factor, not data
+class(Litter$collectDate)#factor, not data
 
 
 ```
@@ -150,30 +164,38 @@ class(Litter$collectDate) #factor, not data
 13. Using the `unique` function, determine how many different plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
 ```{r}
-
+unique(Litter$plotID)
 
 ```
 
-> Answer:
+> Answer: 12 different plots were sampled at Niwot Ridge. 
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 
 ```{r}
-
+ggplot(data = Litter, aes(x = functionalGroup)) +
+  geom_bar() 
 
 ```
 
 15. Using `geom_boxplot` and `geom_violin`, create a boxplot and a violin plot of dryMass by functionalGroup.
 
 ```{r}
+ggplot(Litter) +
+geom_boxplot(aes(x = functionalGroup, y = dryMass, group = cut_width(functionalGroup, 1)))
 
+ggplot(Litter) +
+  geom_violin(aes(x = functionalGroup, y = dryMass), 
+              draw_quantiles = c(0.25, 0.5, 0.75))
 
 ```
 
 Why is the boxplot a more effective visualization option than the violin plot in this case?
 
-> Answer:
+> Answer: In this case the box plot is more effective because it shows a clearly 
+defined median, quartiles, and maximum point for the groups with the most mass. 
+THe violin plot is too thin to be easily read. 
 
 What type(s) of litter tend to have the highest biomass at these sites?
 
-> Answer:
+> Answer:Needles, mixed, and woody litter tend to have the highest boxplot
