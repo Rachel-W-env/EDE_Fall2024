@@ -157,8 +157,11 @@ effect level and LOEL means lowest observable effect level.
 
 ```{r}
 class(Litter$collectDate)#factor, not data
+Litter$collectDate <- ymd(Litter$collectDate)
+class(Litter$collectDate)
+unique(Litter$collectDate)
 
-
+#The dates litter was collected were 08/02/2018 and 08/30/2024
 ```
 
 13. Using the `unique` function, determine how many different plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
