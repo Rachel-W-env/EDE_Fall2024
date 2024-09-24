@@ -32,7 +32,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 
 1.  Load necessary packages (tidyverse, lubridate, here), check your current working directory and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. Be sure to include the subcommand to read strings in as factors.
 
-```{r,  message = FALSE}
+```{r,  Reading data and loading packages}
 #Loading necessary packages
 library(tidyverse); library(lubridate); library(here)
 
@@ -123,7 +123,8 @@ paired with units in Conc.1.Units.Author.
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
 ```{r Neonics publication year freqpoly graph}
-ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year), bins=50) + scale_x_continuous(limits = c(1980 , 2020))
+ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year), bins=50) +
+  scale_x_continuous(limits = c(1980 , 2020))
 #Scale must be continuous not discrete; I chose the limits based on the highest 
 #and lowest dates in the data. 
 ```
@@ -131,7 +132,8 @@ ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year), bins=50) + scale_x_cont
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
 ```{r Color freqpoly graph}
-ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year, color= Test.Location), bins=50)+ scale_x_continuous(limits = c(1980 , 2020))
+ggplot(Neonics) + geom_freqpoly(aes(x=Publication.Year, color= Test.Location),
+                          bins=50)+ scale_x_continuous(limits = c(1980 , 2020))
 #Whatever part of the data color is will be differentiated. 
 ```
 
@@ -190,7 +192,8 @@ ggplot(data = Litter, aes(x = functionalGroup)) +
 
 ```{r Litter mass plots}
 ggplot(Litter) +
-geom_boxplot(aes(x = functionalGroup, y = dryMass, group = cut_width(functionalGroup, 1)))
+geom_boxplot(aes(x = functionalGroup, y = dryMass, 
+                 group = cut_width(functionalGroup, 1)))
 
 ggplot(Litter) +
   geom_violin(aes(x = functionalGroup, y = dryMass), 
@@ -206,4 +209,4 @@ THe violin plot is too thin to be easily read.
 
 What type(s) of litter tend to have the highest biomass at these sites?
 
-> Answer:Needles, mixed, and woody litter tend to have the highest boxplot
+> Answer:Needles, mixed, and woody litter tend to have the highest biomass.
