@@ -156,7 +156,8 @@ summarise(meanAQI= mean(DAILY_AQI_VALUE),
 
 #9
 
-EPAairspread <-pivot_wider(EPAair2, names_from = AQS_PARAMETER_DESC, values_from = meanAQI )
+EPAairspread <-pivot_wider(EPAair2, names_from = AQS_PARAMETER_DESC, 
+                           values_from = meanAQI )
 
 #10
 
