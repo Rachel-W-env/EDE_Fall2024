@@ -79,13 +79,17 @@ EPAair_PM25_2019$Date <- mdy(EPAair_PM25_2019$Date)
 
 #4
 air_03_2018_select<- select(EPAair_03_2018, Date, DAILY_AQI_VALUE, Site.Name, 
-                            AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+                            AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                            SITE_LONGITUDE)
 air_03_2019_select<- select(EPAair_O3_2019,Date, DAILY_AQI_VALUE, Site.Name, 
-                            AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+                            AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                            SITE_LONGITUDE)
 air_PM25_2018_select<- select(EPAair_PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, 
-                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                              SITE_LONGITUDE)
 air_PM25_2019_select<- select(EPAair_PM25_2019, Date, DAILY_AQI_VALUE, Site.Name, 
-                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                              SITE_LONGITUDE)
 
 #5
 
