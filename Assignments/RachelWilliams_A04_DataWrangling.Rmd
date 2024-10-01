@@ -47,12 +47,12 @@ EPAair_PM25_2018 <- read.csv(filename3,
                                stringsAsFactors = T)
 
 filename4 <- here('Data','Raw','EPAair_PM25_NC2019_raw.csv')
-EPAair_PM25_NC2019 <- read.csv(filename4,
+EPAair_PM25_2019 <- read.csv(filename4,
                                stringsAsFactors = T)
 
 #2 
 dim(EPAair_03_2018); dim(EPAair_O3_2019); dim(EPAair_PM25_2018); dim(
-  EPAair_PM25_NC2019)
+  EPAair_PM25_2019)
 
 ```
 
@@ -72,15 +72,35 @@ Yes, all datasets have 20 columns and different numbers of rows.
 
 ```{r questions 3 thru 4}
 #3
-
+EPAair_03_2018$Date <- mdy(EPAair_03_2018$Date)
+EPAair_O3_2019$Date <- mdy(EPAair_O3_2019$Date)
+EPAair_PM25_2018$Date <- mdy(EPAair_PM25_2018$Date)
+EPAair_PM25_2019$Date <- mdy(EPAair_PM25_2019$Date)
 
 #4
-
+air_03_2018_select<- select(EPAair_03_2018, Date, DAILY_AQI_VALUE, Site.Name, 
+                            AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+air_03_2019_select<- select(EPAair_O3_2019,Date, DAILY_AQI_VALUE, Site.Name, 
+                            AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+air_PM25_2018_select<- select(EPAair_PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, 
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+air_PM25_2019_select<- select(EPAair_PM25_2019, Date, DAILY_AQI_VALUE, Site.Name, 
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
 #5
 
+air_PM25_2018_select$AQS_PARAMETER_DESC <- "PM2.5"
+air_PM25_2019_select$AQS_PARAMETER_DESC <- "PM2.5"
 
 #6
+write.csv(air_03_2018_select, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_O3_NC2018_Processed.csv")
+write.csv(air_03_2019_select, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_O3_NC2019_Processed.csv")
+write.csv(air_PM25_2018_select, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_PM25_NC2018_Processed.csv")
+write.csv(air_PM25_2019_select, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_PM25_NC2019_Processed.csv")
 
 ```
 
@@ -115,19 +135,37 @@ Yes, all datasets have 20 columns and different numbers of rows.
 ```{r questions 7 thru 11}
 #7 
 
+EPAair <- rbind(air_03_2018_select,air_03_2019_select,air_PM25_2018_select,
+                air_PM25_2019_select)
 
 #8 
 
+EPAair2 <-
+  EPAair %>%
+  filter( Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue",  
+  "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", 
+  "West Johnston Co.", "Garinger High School", "Castle Hayne", 
+  "Pitt Agri. Center", "Bryson City", "Millbrook School")) %>%
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY)%>%
+    filter(!is.na(DAILY_AQI_VALUE) & !is.na(SITE_LATITUDE) & !is.na(SITE_LONGITUDE)) %>%
+summarise(meanAQI= mean(DAILY_AQI_VALUE),
+          meanlat= mean(SITE_LATITUDE),
+          meanlong= mean(SITE_LONGITUDE)) %>%
+  mutate(month= month(Date)) %>%
+  mutate(year= year(Date))  
 
 #9
 
+EPAairspread <-pivot_wider(EPAair2, names_from = AQS_PARAMETER_DESC, values_from = meanAQI )
 
 #10
 
+dim(EPAairspread)
 
 #11
 
-
+write.csv(EPAairspread, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 ```
 
 
@@ -142,13 +180,22 @@ Yes, all datasets have 20 columns and different numbers of rows.
 #12
 
 
+summaryair <- 
+  EPAairspread %>%
+  group_by(Site.Name, month, year) %>%
+  summarize(meanOzone= mean(Ozone) , meanPM25= mean(PM2.5)) %>%
+  drop_na(meanOzone)
+
 #13
 
-
+dim(summaryair)
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`? Hint: replace `drop_na` with `na.omit` in part 12 and observe what happens with the dimensions of the summary date frame.
 
-> Answer: 
+> Answer: We used 'drop_na' instead of 'na.omit because na.omit removes more
+rows from the summary frame. Dimensions of drop_na are 182 x 5 and dimensions
+of na.omit are 101 x 5. This is because na.omit removes NAs from all columns and
+drop_na is more specific. 
 
