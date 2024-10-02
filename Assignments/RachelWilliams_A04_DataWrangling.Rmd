@@ -29,7 +29,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 
 2. Add the appropriate code to reveal the dimensions of the four datasets. 
 
-```{r setup, message = FALSE}
+```{r setup, message = FALSE} 
 #1a 
 library(tidyverse); library(lubridate); library(here)
 #1b 
