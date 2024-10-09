@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Rachel Williams"
 date: "Fall 2024"
 output: pdf_document
 geometry: margin=2.54cm
@@ -32,8 +32,18 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r initialize project}
 #1 
-
+library(tidyverse);library(lubridate);library(here);library(cowplot)
+here()
+PeterPaul_processed <- read.csv(here("Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"))
+NiwotRidge_litter <- read.csv(here("Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv"))
+                                
 #2 
+class(PeterPaul_processed$sampledate)
+PeterPaul_processed$sampledate <- ymd(PeterPaul_processed$sampledate)
+class(PeterPaul_processed$sampledate)
+class(NiwotRidge_litter$collectDate)
+NiwotRidge_litter$collectDate <- ymd(NiwotRidge_litter$collectDate)
+class(NiwotRidge_litter$collectDate)
 
 ```
 ## Define your theme
@@ -46,6 +56,9 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r build plot theme}
 #3
+mytheme <-theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top", plot.background =   element_rect(color="gray"), plot.title=element_text(size=16, face="bold", hjust=.5))
 
 ```
 
@@ -56,7 +69,14 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r plot total P vs PO4}
 #4 
-
+PhosGraph <- PeterPaul_processed %>%
+ggplot(
+    aes(
+      x=tp_ug,
+      y=po4)
+    ) + ggtitle("Phosphorus vs. Phosphate")  + xlab("Total Phosphorus") + ylab("Total Phosphate") +
+  mytheme 
+PhosGraph
 ```
 
 
@@ -91,4 +111,4 @@ Question: What do you observe about the variables of interest over seasons and b
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer:
+> Answer: I think plot 
