@@ -29,7 +29,8 @@ Using markdown, create a 2-column table beneath the `Table: EPA Air Quality` lin
 
 - The first column should have the header `Item`, below which are three rows listing these metadata attribute item names: `Filename`, `Date`, and `Source`.
 
-- The second column should have the header `Value` and include the metadata values: `EPAair_O3_PM25_NC1819_Processed.csv`, `2018-2019`, and `EPA Air Quality System (AQS)`.
+- The second column should have the header `Value` and include the metadata values: 
+`EPAair_O3_PM25_NC1819_Processed.csv`, `2018-2019`, and `EPA Air Quality System (AQS)`.
 
 - The first column should be aligned to the right and the second to the left.
 
