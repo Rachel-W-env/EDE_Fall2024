@@ -142,9 +142,11 @@ f_year <- year(first(Garinger_data_clean$Date))
 f_month2 <- month(first(GaringerOzone.monthly$Date))
 f_year2 <- year(first(GaringerOzone.monthly$Date))
 
-GaringerOzone.daily.ts <- ts(Garinger_data_clean$Clean.Ozone, start=c(f_year,f_month), frequency=365)
+GaringerOzone.daily.ts <- ts(Garinger_data_clean$Clean.Ozone, 
+                             start=c(f_year,f_month), frequency=365)
 
-GaringerOzone.monthly.ts <- ts(GaringerOzone.monthly$mean_concentration, start=c(f_year2, f_month2), frequency=12)
+GaringerOzone.monthly.ts <- ts(GaringerOzone.monthly$mean_concentration, 
+                               start=c(f_year2, f_month2), frequency=12)
 
 ```
 
@@ -192,9 +194,9 @@ print(monthlyplot)
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: Ozone has been slightly decreasing over time at this station. Ozone 
-is higher in the summer months than the winter months. (tau = -0.143,
-2-sided pvalue =0.046724). 
+> Answer: Ozone has been slightly decreasing over time at this station. This 
+result is significant. Ozone is higher in the summer months than the winter 
+months. (tau = -0.143, 2-sided pvalue =0.046724). 
 
 15. Subtract the seasonal component from the `GaringerOzone.monthly.ts`. Hint: Look at how we extracted the series components for the EnoDischarge on the lesson Rmd file.
 
@@ -222,4 +224,5 @@ summary(monthly_trend2)
 ```
 
 > Answer: These results had a smaller p-value than the seasonal Mann Kendall
-test. 
+test. The tau is also slightly larger, indicating a slightly more negative
+trend. THe results for both tests were statistically significant. 
