@@ -26,7 +26,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 * Load the tidyverse, lubridate, zoo, and trend packages
 * Set your ggplot theme
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(here)
 library(tidyverse)
 library(lubridate)
