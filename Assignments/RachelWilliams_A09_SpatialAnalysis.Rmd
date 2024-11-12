@@ -26,7 +26,7 @@ This exercise accompanies the lessons in Environmental Data Analytics (ENV872L) 
 1.    Import libraries: tidyverse, sf, leaflet, here, and mapview
 2.    Execute the `here()` command to display the current project directory
 
-```{r Prepare workspace, error=F, warning=F}
+```{r Prepare workspace, error=F, message=FALSE, warning=FALSE}
 #1. 
 library(tidyverse)
 library(sf)
@@ -67,8 +67,7 @@ mapview(counties_sf)
 
 6.    What is the EPSG code of the Counties dataset? Is this a geographic or a projected coordinate reference system? (Om other words, does this CRS use angular or planar coordinate units?) To what datum is this CRS associated? (Tip: look for the EPSG code on <https://epsg.io>)
 
-> ANSWER: The EPSG code of the counties dataset is 4269. This is NAD83 and it 
-is a geodetic corrdinate reference system. It is also a datum. 
+> ANSWER: The EPSG code of the counties dataset is 4269. This is associated with the NAD83 datum and it is a geodetic corrdinate reference system. It uses angular units and is a geographic coordinate reference system. 
 
 
 ### Read in gage locations csv as a dataframe, then display the column names it contains
@@ -259,8 +258,8 @@ gage_15 <- st_intersection(gage_sf_utm, lancaster_buffer)
 lancaster_plot <- ggplot()+
 geom_sf(data = counties_sf, fill = "lightgray") +
   geom_sf(data=lancaster, fill="yellow") +
-    geom_sf(data=gage_15, col="blue") +
-  geom_sf(data=Lancaster_gage, col="black")
+    geom_sf(data=gage_15, col="red") +
+  geom_sf(data=Lancaster_gage, col="blue")
 
 
 lancaster_plot
