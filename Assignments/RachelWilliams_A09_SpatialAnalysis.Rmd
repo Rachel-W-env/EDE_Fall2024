@@ -117,7 +117,7 @@ str(NWIS_sf)
 
 12.   What new field(s) appear in the sf dataframe created? What field(s), if any, disappeared?
 
->ANSWER: The fields of dec_long_va and dec_lat_va dissapeared.
+>ANSWER: The fields of dec_long_va and dec_lat_va disappeared.
 A new field called geometry appeared.
 
 
@@ -241,14 +241,28 @@ Now let's zoom into a particular county and examine the gages located there.
 ```{r spatial selection}
 #22 Select the county
 
+lancaster <- counties_sf_utm %>%
+  filter(NAME == 'Lancaster')
 
 #23 Spatially select gages within the selected county
 
+Lancaster_gage <- st_intersection(gage_sf_utm, lancaster)
 
 #24 Spatially select gages within 15 k of the selected county
 
+lancaster_buffer <- st_buffer(lancaster, dist=15000)
+gage_15 <- st_intersection(gage_sf_utm, lancaster_buffer)
 
 #25 Plot
 
+
+lancaster_plot <- ggplot()+
+geom_sf(data = counties_sf, fill = "lightgray") +
+  geom_sf(data=lancaster, fill="yellow") +
+    geom_sf(data=gage_15, col="blue") +
+  geom_sf(data=Lancaster_gage, col="black")
+
+
+lancaster_plot
 
 ```
