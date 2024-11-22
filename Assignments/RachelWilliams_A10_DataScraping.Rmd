@@ -34,7 +34,7 @@ library(lubridate)
 library(here)
 library(dataRetrieval)
 
-here()
+here("/home/guest/EDE_Fall2024")
 
 ```
 
@@ -95,9 +95,27 @@ MGD <- webpage %>%
 ```{r create.a.dataframe.from.scraped.data}
 #4 
 
+data <- data.frame (System_name, PWSID, Ownership, MGD) 
+
+Month <- webpage %>% 
+  html_nodes(".fancy-table:nth-child(48) tr+ tr th") %>% 
+  html_text()
+
+clean_data <- data %>%
+  mutate(Month=Month) %>%
+  mutate(Year=rep(2023)) %>%
+  mutate(Date= as.Date(my(paste(Month,"-",Year))))
+
+clean_data$MGD <- as.numeric(clean_data$MGD)
+
 
 #5 
 
+class(clean_data$MGD)
+class(Month)
+
+ggplot(clean_data, aes(x=Date, y=MGD)) +
+  geom_line() + geom_smooth(method = "lm", col = "blue")
 
 ```
 
@@ -107,6 +125,38 @@ MGD <- webpage %>%
 ```{r construct.a.scraping.function}
 #6. 
 
+scrape_it <- function (PWSID, the_year){
+  web.address <-paste0('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=',PWSID,'&year=',the_year)
+  print(web.address)
+  
+the_url <- read_html(web.address)
+                    
+System_name <-the_url %>% 
+  html_nodes("div+ table tr:nth-child(1) td:nth-child(2)") %>% 
+  html_text()
+PWSID <-the_url %>% 
+  html_nodes("td tr:nth-child(1) td:nth-child(5)") %>% 
+  html_text()
+Ownership <-the_url %>% 
+  html_nodes("div+ table tr:nth-child(2) td:nth-child(4)") %>% 
+  html_text()
+MGD <-the_url %>% 
+  html_nodes("th~ td+ td") %>% 
+  html_text()
+
+clean_data2 <- data.frame (
+  "System Name" = rep(System_name, 12),
+  "PWSID" = rep(PWSID,12),
+  "Ownership" = rep(Ownership, 12),
+  "MGD" = as.numeric(MGD), 
+"Month"= c("Jan", "May", "Sep", "Feb", "Jun","Oct","Mar","Jul","Nov","Apr","Aug","Dec"),
+"Year" = rep(the_year, 12),
+"Date"= mutate(as.Date(my(paste(Month,"-",the_year)))))
+
+
+return(clean_data2)
+}
+
 
 ```
 
@@ -114,6 +164,11 @@ MGD <- webpage %>%
 
 ```{r fetch.and.plot.Durham.2015.data}
 #7 
+
+Durham <- scrape_it('03-32-010',2015)
+
+ggplot(Durham, aes(x=Month, y=MGD)) +
+  geom_line() + geom_smooth(method = "lm", col = "blue")
 
 
 ```
@@ -123,6 +178,12 @@ MGD <- webpage %>%
 ```{r fetch.and.plot.Asheville.2015.data}
 #8 
 
+Asheville <- scrape_it('01-11-010',2015)
+
+combined_data <- rbind(Durham, Asheville)
+
+ggplot(combined_data, aes(x=Month, y=MGD, color=PWSID)) +
+  geom_line() 
 
 ```
 
@@ -132,11 +193,23 @@ MGD <- webpage %>%
 > TIP: See Section 3.2 in the "10_Data_Scraping.Rmd" where we apply "map2()" to iteratively run a function over two inputs. Pipe the output of the map2() function to `bindrows()` to combine the dataframes into a single one. 
 
 ```{r fetch.and.plot.Asheville.multiyear.data }
-#9 
+#9 ????????????
 
+#Subset the facilities
+Town_subset <-  sample(PWSID,20)
+
+#Create a list of the year we want, the same length as the vector above
+the_years <- rep.int(,length(Town_subset))
+
+#"Map" the "scrape.it" function to retrieve data for all these
+dfs_2020 <- map2(the_years, Town_subset, scrape.it) %>%
+  bindrows()
+
+#Conflate the returned list of dataframes into a single one
+df_2020 <- bind_rows(dfs_2020)
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
-> Answer:
+> Answer: Asheville does.....
 >
