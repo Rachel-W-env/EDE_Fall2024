@@ -33,6 +33,7 @@ library(rvest)
 library(lubridate)
 library(here)
 library(dataRetrieval)
+library(dplyr)
 
 here("/home/guest/EDE_Fall2024")
 
@@ -150,9 +151,9 @@ clean_data2 <- data.frame (
   "Ownership" = rep(Ownership, 12),
   "MGD" = as.numeric(MGD), 
 "Month"= c("Jan", "May", "Sep", "Feb", "Jun","Oct","Mar","Jul","Nov","Apr","Aug","Dec"),
-"Year" = rep(the_year, 12),
-"Date"= mutate(as.Date(my(paste(Month,"-",the_year)))))
+"Year"= rep(the_year, 12) )
 
+clean_data2$Date <- as.Date(my(paste(clean_data2$Month,"-",clean_data2$Year)))
 
 return(clean_data2)
 }
@@ -167,7 +168,7 @@ return(clean_data2)
 
 Durham <- scrape_it('03-32-010',2015)
 
-ggplot(Durham, aes(x=Month, y=MGD)) +
+ggplot(Durham, aes(x=Date, y=MGD)) +
   geom_line() + geom_smooth(method = "lm", col = "blue")
 
 
@@ -182,7 +183,7 @@ Asheville <- scrape_it('01-11-010',2015)
 
 combined_data <- rbind(Durham, Asheville)
 
-ggplot(combined_data, aes(x=Month, y=MGD, color=PWSID)) +
+ggplot(combined_data, aes(x=Date, y=MGD, color=PWSID)) +
   geom_line() 
 
 ```
@@ -195,21 +196,21 @@ ggplot(combined_data, aes(x=Month, y=MGD, color=PWSID)) +
 ```{r fetch.and.plot.Asheville.multiyear.data }
 #9 ????????????
 
-#Subset the facilities
-Town_subset <-  sample(PWSID,20)
+# Sample PWSIDs from the Asheville data (subset facilities)
+Asheville_subset <- sample(Asheville$PWSID, 5)
 
-#Create a list of the year we want, the same length as the vector above
-the_years <- rep.int(,length(Town_subset))
+# Create a vector for years 2018 to 2022, repeated for each PWSID
+the_years <- rep(2018:2022, each = length(Asheville_subset))
 
-#"Map" the "scrape.it" function to retrieve data for all these
-dfs_2020 <- map2(the_years, Town_subset, scrape.it) %>%
-  bindrows()
+# Map the "scrape.it" function to retrieve data for all combinations of PWSID and year
+Asheville_2018_2020 <- map2(the_years, rep(Asheville_subset, times = 5), scrape_it) %>% bind_rows()
 
 #Conflate the returned list of dataframes into a single one
-df_2020 <- bind_rows(dfs_2020)
+Asheville_2018_2020 <- bind_rows(dfs_2020) 
+
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
-> Answer: Asheville does.....
+> Answer: By looking at the plot, Asheville appears to be decreasing in water usage over time. 
 >
