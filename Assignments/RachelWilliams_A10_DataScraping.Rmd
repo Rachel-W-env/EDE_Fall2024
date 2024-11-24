@@ -194,23 +194,17 @@ ggplot(combined_data, aes(x=Date, y=MGD, color=PWSID)) +
 > TIP: See Section 3.2 in the "10_Data_Scraping.Rmd" where we apply "map2()" to iteratively run a function over two inputs. Pipe the output of the map2() function to `bindrows()` to combine the dataframes into a single one. 
 
 ```{r fetch.and.plot.Asheville.multiyear.data }
-#9 ????????????
+#9 
 
-# Sample PWSIDs from the Asheville data (subset facilities)
-Asheville_subset <- sample(Asheville$PWSID, 5)
+Asheville2 <- seq(2018,2022) %>% map(~scrape_it("01-11-010",.)) %>% bind_rows()
 
-# Create a vector for years 2018 to 2022, repeated for each PWSID
-the_years <- rep(2018:2022, each = length(Asheville_subset))
 
-# Map the "scrape.it" function to retrieve data for all combinations of PWSID and year
-Asheville_2018_2020 <- map2(the_years, rep(Asheville_subset, times = 5), scrape_it) %>% bind_rows()
-
-#Conflate the returned list of dataframes into a single one
-Asheville_2018_2020 <- bind_rows(dfs_2020) 
+ggplot(Asheville2, aes(x=Date, y=MGD)) +
+  geom_line() + geom_smooth(method="loess",se=FALSE)
 
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
-> Answer: By looking at the plot, Asheville appears to be decreasing in water usage over time. 
+> Answer: By looking at the plot, Asheville appears to be increasing in water usage over time. 
 >
